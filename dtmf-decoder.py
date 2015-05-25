@@ -8,6 +8,27 @@ import wave
 import struct
 import sys
 import math
+
+ITU_Q23_KEYS = {# Row    Col     Key
+                (697.0, 1209.0): '1',
+                (697.0, 1336.0): '2',
+                (697.0, 1477.0): '3',
+                (697.0, 1633.0): 'A',
+                (770.0, 1209.0): '4',
+                (770.0, 1336.0): '5',
+                (770.0, 1477.0): '6',
+                (770.0, 1633.0): 'B',
+                (852.0, 1209.0): '7',
+                (852.0, 1336.0): '8',
+                (852.0, 1477.0): '9',
+                (852.0, 1633.0): 'C',
+                (941.0, 1209.0): '*',
+                (941.0, 1336.0): '0',
+                (941.0, 1477.0): '#',
+                (941.0, 1633.0): 'D',
+                }
+
+
 class pygoertzel_dtmf:
     def __init__(self, samplerate):
         self.samplerate = samplerate
@@ -43,42 +64,10 @@ class pygoertzel_dtmf:
             if freqs[f]>lofreq_v:
                 lofreq_v = freqs[f]
                 lofreq = f
-        if lofreq==697.0:
-            if hifreq==1209.0:
-                return "1"
-            elif hifreq==1336.0:
-                return "2"
-            elif hifreq==1477.0:
-                return "3"
-            elif hifreq==1633.0:
-                return "A"
-        elif lofreq==770.0:
-            if hifreq==1209.0:
-                return "4"
-            elif hifreq==1336.0:
-                return "5"
-            elif hifreq==1477.0:
-                return "6"
-            elif hifreq==1633.0:
-                return "B"
-        elif lofreq==852.0:
-            if hifreq==1209.0:
-                return "7"
-            elif hifreq==1336.0:
-                return "8"
-            elif hifreq==1477.0:
-                return "9"
-            elif hifreq==1633.0:
-                return "C"
-        elif lofreq==941.0:
-            if hifreq==1209.0:
-                return "*"
-            elif hifreq==1336.0:
-                return "0"
-            elif hifreq==1477.0:
-                return "#"
-            elif hifreq==1633.0:
-                return "D"
+
+        if lofreq and hifreq:
+            return ITU_Q23_KEYS[(lofreq, hifreq)]
+
     def run(self, sample):
         freqs = {}
         for freq in self.goertzel_freq:
