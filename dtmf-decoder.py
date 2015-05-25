@@ -51,23 +51,19 @@ class pygoertzel_dtmf:
             self.N[k] = 0.0
             normalizedfreq = k / self.samplerate
             self.coeff[k] = 2.0*math.cos(2.0 * math.pi * normalizedfreq)
+
+    def strongest_freq(self, freqs, candidate_freqs):
+        freq = 0.0
+        freq_v = 0.0
+        for f in candidate_freqs:
+            if freqs[f] > freq_v:
+                freq_v = freqs[f]
+                freq = f
+        return freq
+
     def __get_number(self, freqs):
-        hi = [1209.0,1336.0,1477.0,1633.0]
-        lo = [697.0,770.0,852.0,941.0]
-        # get hi freq
-        hifreq = 0.0
-        hifreq_v = 0.0
-        for f in hi:
-            if freqs[f]>hifreq_v:
-                hifreq_v = freqs[f]
-                hifreq = f
-        # get lo freq
-        lofreq = 0.0
-        lofreq_v = 0.0
-        for f in lo:
-            if freqs[f]>lofreq_v:
-                lofreq_v = freqs[f]
-                lofreq = f
+        hifreq = self.strongest_freq(freqs, reversed(ITU_Q23_COLS))
+        lofreq = self.strongest_freq(freqs, reversed(ITU_Q23_ROWS))
 
         if lofreq and hifreq:
             return ITU_Q23_KEYS[(lofreq, hifreq)]
@@ -85,6 +81,7 @@ class pygoertzel_dtmf:
                 self.totalpower[freq] = 1
             freqs[freq] = power / self.totalpower[freq] / self.N[freq]
         return self.__get_number(freqs)
+
 if __name__ == '__main__':
     # load wav file
     wav = wave.open(sys.argv[1], 'r')
