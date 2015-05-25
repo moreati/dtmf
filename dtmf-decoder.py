@@ -9,6 +9,10 @@ import struct
 import sys
 import math
 
+ITU_Q23_ROWS = ( 697.0,  770.0,  852.0,  941.0) # Hz
+ITU_Q23_COLS = (1209.0, 1336.0, 1477.0, 1633.0) # Hz
+ITU_Q23_FREQS = ITU_Q23_ROWS + ITU_Q23_COLS
+
 ITU_Q23_KEYS = {# Row    Col     Key
                 (697.0, 1209.0): '1',
                 (697.0, 1336.0): '2',
@@ -30,9 +34,9 @@ ITU_Q23_KEYS = {# Row    Col     Key
 
 
 class pygoertzel_dtmf:
-    def __init__(self, samplerate):
+    def __init__(self, samplerate, freq=ITU_Q23_FREQS):
         self.samplerate = samplerate
-        self.goertzel_freq = [1209.0,1336.0,1477.0,1633.0,697.0,770.0,852.0,941.0]
+        self.goertzel_freq = freq
         self.s_prev = {}
         self.s_prev2 = {}
         self.totalpower = {}
