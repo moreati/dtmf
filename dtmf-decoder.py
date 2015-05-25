@@ -6,6 +6,7 @@ representation of the DTMF tone.
 '''
 import wave
 import struct
+import sys
 import math
 class pygoertzel_dtmf:
     def __init__(self, samplerate):
@@ -93,7 +94,7 @@ class pygoertzel_dtmf:
         return self.__get_number(freqs)
 if __name__ == '__main__':
     # load wav file
-    wav = wave.open('/home/michael/Downloads/dtmf.wav', 'r')
+    wav = wave.open(sys.argv[1], 'r')
     (nchannels, sampwidth, framerate, nframes, comptype, compname) = wav.getparams()
     frames = wav.readframes(nframes * nchannels)
     # convert wave file to array of integers
